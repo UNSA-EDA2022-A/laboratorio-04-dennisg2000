@@ -9,6 +9,9 @@ public class SinglyLinkedList<T> {
         first = null;
         size = 0;
     }
+    public boolean esIgual(T a,T b) {//se comparan los valores
+    	return (a == b);
+    }
 
     // Retorna el tamano de la lista
     public int size() {
@@ -100,16 +103,84 @@ public class SinglyLinkedList<T> {
 
     // Elimina aquellos nodos de la lista que esten duplicados
     public void deleteDuplicates() {
+        int[] posiciones = new int[size];
+    	for(int a=0;a<size;a++)
+    		posiciones[a]=0;
+    	int pos=0;
+    	int pos2=0;
+    	Node<T> cur = first;
+        while (cur.getNext() != null) {//se compara el primer elemento con los demas
+        	Node<T> cur2 = cur.getNext();
+        	pos2=pos;
+        	while(cur2!= null) {
+        		if(esIgual(cur2.getValue(),cur.getValue())) {
+        			posiciones[pos2]=1;     //se guarda las posiciones de los elementos duplicados
+        		}
+        		cur2 = cur2.getNext();
+        		pos2++;
+        	}
+        	cur = cur.getNext();
+        	pos++;
+        	
+        }
+        int tam=size;
+        int despl=1;
+        for (int i = 0; i < tam; i++) {
+            if(posiciones[i]==1) {
+            	deleteNth(i+despl); //se eliminan los elementos duplicados segun las posiciones guardadas
+            	despl-=1;
+            }
+            
+        }  
+        	
 
     }
 
     // Inserta un nuevo nodo en una posicion especifica de la lista
     public void insertNth(T data, int position) {
-
+        if (isEmpty())
+            return;
+    	if (position>size) {
+    		System.out.println("Fuera de rango.");
+    		return;
+    	}
+    	if(position==0) {
+    		addFirst(data);
+    		return ;
+    	}
+    	else {
+           
+            Node<T> cur = first;
+            for (int i = 0; i < position-1; i++)//se avanza hasta el elmento en cuestion y se acualizan las direcciones
+                cur = cur.getNext();
+            Node<T> newNode = new Node<T>(data, null);
+            newNode.setNext(cur.getNext());
+            cur.setNext(newNode);
+        }
+        size++;
     }
 
     // Elimina el nodo de una posicion especifica de la lista
     public void deleteNth(int position) {
+        if (isEmpty())
+            return;
+    	if (position>size) {
+    		System.out.println("Fuera de rango.");
+    		return;
+    	}
+    	if(position==0) {
+    		removeFirst();
+    		return ;
+    	}
+    	else {
+            
+            Node<T> cur = first;
+            for (int i = 0; i < position-1; i++)//se actualiza la direccion del elemento anterior al que va a ser eliminado al siguiente de este
+                cur = cur.getNext();
+            
+            cur.setNext(cur.getNext().getNext());
+        }
+        size--;
 
     }
 
